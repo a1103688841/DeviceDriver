@@ -65,8 +65,8 @@ volatile typedef union _STATUS
     char _byte;
  	struct
 	{
-		unsigned char main;
-		unsigned char main_last;
+		unsigned char work;
+		unsigned char work_last;
 		unsigned char sw;
 	};
 } STATUS_t;

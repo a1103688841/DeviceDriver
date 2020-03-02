@@ -1,13 +1,9 @@
 
 /* externs */
-extern boolean_t Button_Attach (Button_t *btn, Button_Event btn_event, Button_CallBack btn_callback);
-extern boolean_t Button_Create (const char *name, Button_t *btn, uint8_t (*read_btn_level) (void), uint8_t btn_trigger_level);
+extern void Add_Button (Button_t* btn);
+extern void Button_Attach_ini (void);
 extern void Button_Cycle_Process (Button_t *btn);
 extern void Button_Delete (Button_t *btn);
 extern void Button_Process (void);
-extern void Button_Process_CallBack (void *btn);
-extern uint8_t Get_Button_Event (Button_t *btn);
-extern void Get_Button_EventInfo (Button_t *btn);
-extern uint8_t Get_Button_State (Button_t *btn);
-extern struct button* Search_Button (char Name[]);
+extern void SW1_2_Long_CallBack (void *btn);
 
