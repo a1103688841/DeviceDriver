@@ -1,0 +1,14 @@
+
+Current Stack:
+
+1: BaoNewFileH
+--------------------------
+C:\Users\20191012\Documents\Source Insight 4.0\Projects\Base\utils_owon.em(935) :  	szFile = GetFileName("f", GetBufName(hbuf))
+hbuf = "1"
+ln = "23"
+szDay = "2"
+szMonth = "3"
+szMyName = "谢子豪"
+szTime = "date="2020年3月2日";time="11:03:40";year="2020";month="3";dayofweek="1";day="2";hour="11";minute="3";second="40";milliseconds="159";"
+szYear = "2020"
+

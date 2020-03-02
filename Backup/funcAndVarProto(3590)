@@ -1,0 +1,5 @@
+
+/* static function pre-declared */
+static void Add_Button (Button_t* btn);
+static char *StrnCopy (char *dst, const char *src, uint32_t n);
+
