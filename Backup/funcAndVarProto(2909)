@@ -1,0 +1,9 @@
+
+/* externs */
+extern void Add_Button (Button_t* btn);
+extern void Button_Attach_ini (void);
+extern void Button_Cycle_Process (Button_t *btn);
+extern void Button_Delete (Button_t *btn);
+extern void Button_Process (void);
+extern void SW1_2_Long_CallBack (void *btn);
+

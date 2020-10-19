@@ -31,9 +31,6 @@ static SQ_btn_t 	button_list;
 static char *StrnCopy(char *dst, const char *src, unsigned int n);
 static boolean_t Button_Attach (Button_t *btn, Button_Event btn_event, Button_CallBack btn_callback);
 static boolean_t Button_Create (const char *name, Button_t *btn, uint8_t (*read_btn_level) (void), uint8_t btn_trigger_level);
-//tail interpolation method
-extern void Add_Button (Button_t* btn);
-extern void Button_Delete (Button_t *btn);
 //button state determine
 static void Button_Cycle_Process (Button_t *btn);
 
@@ -49,6 +46,10 @@ static void button_record(char *event_name);
 //main button function
 extern void Button_Attach_ini (void);
 extern void Button_Process (void);
+//tail interpolation method
+extern void Add_Button (Button_t* btn);
+extern void Button_Delete (Button_t *btn);
+
 
 
 /* -------------------------------------------modify funtion ----------------------------------------- */

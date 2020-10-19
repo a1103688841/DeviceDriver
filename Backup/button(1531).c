@@ -8,23 +8,29 @@
 #define __BUTTON_C__
 
 /* ------------------------------------------- include ----------------------------------------- */
+//修改的头文件
 #include "txt.h"	//sw callback need global variable
-#include "ybase.h"	//data define || NULL FALSE TRUE define
+#include "def.h"	//data define || NULL FALSE TRUE define
+#include "gd32f30x.h"//Get gipo level
+//default
 #include "button.h" //data sturct
 #include "string.h" //memset() strcmp() fuction
-#include "gpio.h"	//Get gipo level
+#include "stdio.h"
 /* ------------------------------------- define/typedef/enum ----------------------------------- */
+
+
 /* ------------------------------------------- variable ---------------------------------------- */
 //Button's head
 static struct button* Head_Button = NULL;
 
 //new many button 
+////需要修改的函数变量
 static Button_t 	SW0;
 static Button_t 	SW1;
 static Button_t		SW2;
-static Button_t 	SW1_2;
-static Button_t		SW3;
-static SQ_btn_t 	button_list;
+static Button_t 	SW3;
+static Button_t		SW4;
+//密码
 
 /* -------------------------------------------static funtion ----------------------------------------- */
 //Name str copy
@@ -34,15 +40,26 @@ static boolean_t Button_Create (const char *name, Button_t *btn, uint8_t (*read_
 //tail interpolation method
 extern void Add_Button (Button_t* btn);
 extern void Button_Delete (Button_t *btn);
+
 //button state determine
 static void Button_Cycle_Process (Button_t *btn);
 
 
 //read sw level || sw event callback
-static boolean_t Read_SW0_Level (void);
-static void SW0_Down_CallBack (void *btn);
-static void SW1_2_Long_CallBack (void *btn);
-static void button_record(char *event_name);
+////需要修改的函数声明
+static boolean_t 	Read_SW0_Level (void);
+static boolean_t 	Read_SW1_Level (void);
+static boolean_t 	Read_SW2_Level (void);
+static boolean_t 	Read_SW3_Level (void);
+static boolean_t 	Read_SW4_Level (void);
+static void 		SW0_Down_CallBack (void *btn);
+static void 		SW1_2_Long_CallBack (void *btn);
+static void 		SW1_Down_CallBack (void *btn);
+static void 		SW2_Down_CallBack (void *btn);
+static void 		SW3_Down_CallBack (void *btn);
+static void 		SW4_Down_CallBack (void *btn);
+////record function
+static void 		btnRecord(char *event_name);
 
 
 /* -------------------------------------------global funtion ----------------------------------------- */
@@ -51,57 +68,126 @@ extern void Button_Attach_ini (void);
 extern void Button_Process (void);
 
 
-/* -------------------------------------------modify funtion ----------------------------------------- */
-/* --------------------ini button node and attach button event callbak to button----------------------------------------- */
-void Button_Attach_ini(void)
 
+/* -------------------------------------------modify funtion ----------------------------------------- */
+//需要修改的函数
+/* --------------------ini button node and attach button event callbak to button----------------------------------------- */
+//按键链接初始化
 void Button_Attach_ini(void)
 {
-  Button_Create("SW0",
-              &SW0,
-              Read_SW0_Level,
-              HIGHT);
- Button_Attach(&SW0,BUTTON_DOWM,SW0_Down_CallBack);                       //call fuction attach
+
+  	Button_GPIO_ini();
+ 	Button_Create("SW0",&SW0,Read_SW0_Level,HIGHT);
+	Button_Attach(&SW0,BUTTON_DOWN,SW0_Down_CallBack);                       //call fuction attach
+	
+  	Button_Create("SW1",&SW1,Read_SW1_Level,HIGHT);
+	Button_Attach(&SW1,BUTTON_DOWN,SW1_Down_CallBack);                       //call fuction attach
+	
+  	Button_Create("SW2",&SW2,Read_SW2_Level,LOW);
+	Button_Attach(&SW2,BUTTON_DOWN,SW2_Down_CallBack);                       //call fuction attach
+
+ 	Button_Create("SW3",&SW3,Read_SW3_Level,HIGHT);
+	Button_Attach(&SW3,BUTTON_DOWN,SW3_Down_CallBack);                       //call fuction attach
+	
+  	Button_Create("SW4",&SW4,Read_SW4_Level,HIGHT);
+	Button_Attach(&SW4,BUTTON_DOWN,SW4_Down_CallBack);                       //call fuction attach
+
 }
+
+//修改按键引脚初始化
+void Button_GPIO_ini()
+{
+
+ 	GPIO_InitTypeDef GPIO_InitStructure;
+ 
+ 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOE,ENABLE);//使能PORTA,PORTE时钟
+
+	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_4|GPIO_Pin_3|GPIO_Pin_1|GPIO_Pin_2;//KEY0-KEY1
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //设置成上拉输入
+ 	GPIO_Init(GPIOE, &GPIO_InitStructure);//初始化GPIOE4,3
+
+
+	//初始化 WK_UP-->GPIOA.0	  下拉输入
+	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; //PA0设置成输入，默认下拉	  
+	GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA.0
+	
+}
+//修改函数状态转移初始化
+void mstaVarIni()
+{
+
+}
+
 /* -------------------------------------------sw level ----------------------------------------- */
+//修改电平
+/* ----------------------------------------------------------------------------------------------------- */
 static boolean_t Read_SW0_Level(void)
 {
-	if(GetSW0)
-	{
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
+	return (GetSW0)?TRUE:FALSE;
+}
+static boolean_t Read_SW1_Level(void)
+{
+	return (GetSW1)?TRUE:FALSE;
+}
+static boolean_t Read_SW2_Level(void)
+{
+	return (GetSW2)?TRUE:FALSE;
+}
+static boolean_t Read_SW3_Level(void)
+{
+	return (GetSW3)?TRUE:FALSE;
+}
+static boolean_t Read_SW4_Level(void)
+{
+	return (GetSW4)?TRUE:FALSE;
 }
 /* -------------------------------------------sw down callback ----------------------------------------- */
+//修改按键逻辑
+/* ----------------------------------------------------------------------------------------------------- */
 static void SW0_Down_CallBack(void *btn)
 {
-	switch(sta.main)
-	{
-		case Auto_measurement_mode:
-			sta.main_last=Auto_measurement_mode;
-			sta.main=Man_measurement_mode;
-			break;
-		case Man_measurement_mode:
-			sta.main_last=Man_measurement_mode;
-			sta.main=Auto_measurement_mode;
-			break;
-		default:
-			break;
-
-	}
-	button_record("SW0_Down");
+	// 0-3
+	mstaVarIni();
+//	btnRecord(SW0_Down_e);
 
 }
+static void SW1_Down_CallBack(void *btn)
+{
+	mstaVarIni();
+//	btnRecord(SW1_Down_e);
+
+}
+static void SW2_Down_CallBack(void *btn)
+{
+	mstaVarIni();
+	//btnRecord(SW2_Down_e);
+
+}
+static void SW3_Down_CallBack(void *btn)
+{
+	mstaVarIni();
+//	btnRecord(SW1_Down_e);
+
+}
+static void SW4_Down_CallBack(void *btn)
+{
+	mstaVarIni();
+//	btnRecord(SW1_Down_e);
+
+}
+
+
 /* -------------------------------------------sw long callback ----------------------------------------- */
 static void SW1_2_Long_CallBack(void *btn)
 {
 
 }
+
 /* -----------------------------------sw record and trigger event ----------------------------------------- */
-static void button_record(char *event_name)
+
+/*
+static void btnRecord(char event_name)
 {
 	boolean_t f1,f2,f3;
  	int8_t i;
@@ -137,35 +223,37 @@ static void button_record(char *event_name)
 	{
 		//sta.main=calibration_mode;
 	}
-
  }
+ */
+
+/* ------------------------------------------- funtion ----------------------------------------- */
+//内部函数
 /* ------------------------------------------- funtion ----------------------------------------- */
 /************************************************************
-* @brief 	button cycle proces  fuction
-* @param   btn:
-* @return  NULL
-* @version v1.0
-* @note    cycle call time 20~50ms
-***********************************************************/
-static void Button_Cycle_Process(Button_t *btn)
+  * @brief   按键周期处理函数
+  * @param   btn:处理的按键
+  * @return  NULL
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    必须以一定周期调用此函数，建议周期为20~50ms
+  ***********************************************************/
+void Button_Cycle_Process(Button_t *btn)
 {
-  //real time to get current level	
   uint8_t current_level = (uint8_t)btn->Read_Button_Level();
-
-  //button mechanical noise filtering 
-  if((current_level != btn->Button_Last_Level)&&(++(btn->Debounce_Time) >= BUTTON_DEBOUNCE_TIME)) //鎸夐敭鐢靛钩鍙戠敓鍙樺寲锛屾秷鎶?
+  
+  if((current_level != btn->Button_Last_Level)&&(++(btn->Debounce_Time) >= BUTTON_DEBOUNCE_TIME)) 
   {
-  	  //button level update
       btn->Button_Last_Level = current_level; 
       btn->Debounce_Time = 0;                 
 
-      //button state update
       if((btn->Button_State == NONE_TRIGGER)||(btn->Button_State == BUTTON_DOUBLE))
       {
-        btn->Button_State = BUTTON_DOWM;
+        btn->Button_State = BUTTON_DOWN;
       }
 
-      else if(btn->Button_State == BUTTON_DOWM)
+      else if(btn->Button_State == BUTTON_DOWN)
       {
         btn->Button_State = BUTTON_UP;
       }
@@ -173,40 +261,40 @@ static void Button_Cycle_Process(Button_t *btn)
   
   switch(btn->Button_State)
   {
-    case BUTTON_DOWM :	//button down
+    case BUTTON_DOWN :           
     {
       if(btn->Button_Last_Level == btn->Button_Trigger_Level) 
       {
-        #if CONTINUOS_TRIGGER     //suppot continos trigger
-		//continos trigger callback
+        #if CONTINUOS_TRIGGER     
+
         if(++(btn->Button_Cycle) >= BUTTON_CONTINUOS_CYCLE)
         {
           btn->Button_Cycle = 0;
           btn->Button_Trigger_Event = BUTTON_CONTINUOS; 
-          TRIGGER_CB(BUTTON_CONTINUOS);    
+          TRIGGER_CB(BUTTON_CONTINUOS);  
         }
         
         #else
-		
         if(btn->Button_Trigger_Event != BUTTON_LONG)
-          btn->Button_Trigger_Event = BUTTON_DOWM;
+          btn->Button_Trigger_Event = BUTTON_DOWN;
       
-        if(++(btn->Long_Time) >= BUTTON_LONG_TIME)  //
+        if(++(btn->Long_Time) >= BUTTON_LONG_TIME)  
+        {
           #if LONG_FREE_TRIGGER
           
           btn->Button_Trigger_Event = BUTTON_LONG; 
           
           #else
           
-          if(++(btn->Button_Cycle) >= BUTTON_LONG_CYCLE)    //
+          if(++(btn->Button_Cycle) >= BUTTON_LONG_CYCLE)    
           {
             btn->Button_Cycle = 0;
             btn->Button_Trigger_Event = BUTTON_LONG; 
-            TRIGGER_CB(BUTTON_LONG);    //
+            TRIGGER_CB(BUTTON_LONG);    
           }
           #endif
           
-          if(btn->Long_Time == 0xFF)  //
+          if(btn->Long_Time == 0xFF)  
           {
             btn->Long_Time = BUTTON_LONG_TIME;
           }
@@ -218,11 +306,11 @@ static void Button_Cycle_Process(Button_t *btn)
       break;
     } 
     
-    case BUTTON_UP :        // 
+    case BUTTON_UP :        
     {
-      if(btn->Button_Trigger_Event == BUTTON_DOWM)  //
+      if(btn->Button_Trigger_Event == BUTTON_DOWN)  
       {
-        if((btn->Timer_Count <= BUTTON_DOUBLE_TIME)&&(btn->Button_Last_State == BUTTON_DOUBLE)) // 
+        if((btn->Timer_Count <= BUTTON_DOUBLE_TIME)&&(btn->Button_Last_State == BUTTON_DOUBLE)) 
         {
           btn->Button_Trigger_Event = BUTTON_DOUBLE;
           TRIGGER_CB(BUTTON_DOUBLE);    
@@ -232,10 +320,10 @@ static void Button_Cycle_Process(Button_t *btn)
         else
         {
             btn->Timer_Count=0;
-            btn->Long_Time = 0;   //
+            btn->Long_Time = 0; 
           
           #if (SINGLE_AND_DOUBLE_TRIGGER == 0)
-            TRIGGER_CB(BUTTON_DOWM);    //
+            TRIGGER_CB(BUTTON_DOWN);  
           #endif
             btn->Button_State = BUTTON_DOUBLE;
             btn->Button_Last_State = BUTTON_DOUBLE;
@@ -246,21 +334,21 @@ static void Button_Cycle_Process(Button_t *btn)
       else if(btn->Button_Trigger_Event == BUTTON_LONG)
       {
         #if LONG_FREE_TRIGGER
-          TRIGGER_CB(BUTTON_LONG);    //
+          TRIGGER_CB(BUTTON_LONG);    
         #else
-          TRIGGER_CB(BUTTON_LONG_FREE);    //
+          TRIGGER_CB(BUTTON_LONG_FREE);    
         #endif
         btn->Long_Time = 0;
         btn->Button_State = NONE_TRIGGER;
         btn->Button_Last_State = BUTTON_LONG;
-		btn->Button_Trigger_Event = BUTTON_DOWM;
+		btn->Button_Trigger_Event = BUTTON_DOWN;
       } 
       
       #if CONTINUOS_TRIGGER
-        else if(btn->Button_Trigger_Event == BUTTON_CONTINUOS)  //
+        else if(btn->Button_Trigger_Event == BUTTON_CONTINUOS)  
         {
           btn->Long_Time = 0;
-          TRIGGER_CB(BUTTON_CONTINUOS_FREE);    //
+          TRIGGER_CB(BUTTON_CONTINUOS_FREE);  
           btn->Button_State = NONE_TRIGGER;
           btn->Button_Last_State = BUTTON_CONTINUOS;
         } 
@@ -269,9 +357,8 @@ static void Button_Cycle_Process(Button_t *btn)
       break;
     }
     
-    case BUTTON_DOUBLE :		//
-    {
-      btn->Timer_Count++;     //
+    case BUTTON_DOUBLE :		
+      btn->Timer_Count++;     
       if(btn->Timer_Count>=BUTTON_DOUBLE_TIME)
       {
         btn->Button_State = NONE_TRIGGER;
@@ -279,20 +366,16 @@ static void Button_Cycle_Process(Button_t *btn)
       }
       #if SINGLE_AND_DOUBLE_TRIGGER
       
-        if((btn->Timer_Count>=BUTTON_DOUBLE_TIME)&&(btn->Button_Last_State != BUTTON_DOWM))
+        if((btn->Timer_Count>=BUTTON_DOUBLE_TIME)&&(btn->Button_Last_State != BUTTON_DOWN))
         {
           btn->Timer_Count=0;
-          TRIGGER_CB(BUTTON_DOWM);    //
+          TRIGGER_CB(BUTTON_DOWN);    
           btn->Button_State = NONE_TRIGGER;
-          btn->Button_Last_State = BUTTON_DOWM;
+          btn->Button_Last_State = BUTTON_DOWN;
         }
-        
       #endif
-
       break;
-    }
-
-    default :
+    default:
       break;
   }
   
