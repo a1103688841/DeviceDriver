@@ -1,30 +1,13 @@
 
 /* externs */
-extern void arrayAB2BA (int16_t A[], int m, int n, int arraySize);
-extern int arrayABMedian (int A[], int B[], int n);
-extern boolean_t arrayInverse (int16_t A[], int left, int right, int arraySize);
-extern uint8_t arrayMajorElements (int A[], int size);
-extern void arrayRotateLeft (int16_t R[], int n, int p);
-extern int16_t arraySeqArraySearchInsert (int16_t A[], int size_max, sqElemType x);
-extern int arryMiniPositInteger (int A[], int size);
-extern sqStatus sqClearList (SqList *L);
-extern void sqDelAllX (SqList *L , sqElemType x);
-extern void sqDelAllX_Opt1 (SqList *L, sqStatus x);
-extern void sqDelAllX_Opt2 (SqList *L, sqElemType x);
-extern sqStatus sqDelMin (SqList *L , sqElemType *value);
-extern boolean_t sqDelSeqListEqual (SqList *L);
-extern sqStatus sqDelSeqListMin2Max (SqList *L, sqElemType min_data, sqElemType max_data);
-extern boolean_t sqDelSeqListMin2Max2 (SqList *L, sqElemType min_data, sqElemType max_data);
-extern sqStatus sqGetElem (SqList L, int i, sqElemType *e);
-extern sqStatus sqInitList (SqList *L);
-extern void sqInversion (SqList *L);
-extern sqStatus sqListDelete (SqList *L, int i, sqElemType *e);
-extern sqStatus sqListEmpty (SqList L);
-extern sqStatus sqListInsert (SqList *L, int i, sqElemType e);
-extern int16_t sqListLength (SqList L);
-extern sqStatus sqListTraverse (SqList L);
-extern int16_t sqLocateElem (SqList L, sqElemType e);
-extern void sqUnionList (SqList *La, SqList Lb);
-extern boolean_t sqUnionSeqList (SqList A, SqList B, SqList *C);
-extern sqStatus sqVisit (sqElemType c);
+extern lQStatus lQueueClear (LinkQueue *Q);
+extern lQStatus lQueueDeQueue (LinkQueue *Q, lQElemType *e);
+extern lQStatus lQueueDestroy (LinkQueue *Q);
+extern lQStatus lQueueEmpty (LinkQueue Q);
+extern lQStatus lQueueEnQueue (LinkQueue *Q, lQElemType e);
+extern lQStatus lQueueGetHead (LinkQueue Q, lQElemType *e);
+extern lQStatus lQueueInit (LinkQueue *Q);
+extern int lQueueLength (LinkQueue Q);
+extern lQStatus lQueuePrintfTraverse (LinkQueue Q);
+extern int main ();
 

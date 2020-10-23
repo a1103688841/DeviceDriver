@@ -12,7 +12,6 @@
 #define __SQLIST_C__
 /* ------------------------------------------- include ----------------------------------------- */
 #include "sqList.h"
-
 /* ------------------------------------- define/typedef/enum ----------------------------------- */
 
 /* ------------------------------------------- variable ---------------------------------------- */
@@ -21,7 +20,8 @@
 /* -------------------------------------------static funtion ----------------------------------------- */
 #ifdef STATIC_FUNCTION
 #endif	/* STATIC_FUNCTION */
-
+//打印一个元素
+static sqStatus sqVisit(sqElemType c);
 
 /* -------------------------------------------global funtion ----------------------------------------- */
 #ifdef GLOBAL_FUNCTION
@@ -38,14 +38,15 @@
 *1） 修改函数
 **************************************************************************************************/
 //打印一个数组单链表的值
-sqStatus sqVisit(sqElemType c)
+static sqStatus sqVisit(sqElemType c)
 {
-	Uart_Printf("this fifo[i] data is %d\n",__MODULE__,__LINE__,c);
+		//选定打印的函数
+		//Uart_Printf("this fifo[i] data is %d\n",__MODULE__,__LINE__,c);
     return OK;
 }
 /* 初始条件：顺序线性表L已存在 */
 /* 操作结果：依次对L的每个数据元素输出 */
-sqStatus sqListTraverse(SqList L)
+sqStatus sqListPrintTraverse(SqList L)
 {
 	int i;
     for(i=0;i<L.length;i++)
@@ -196,16 +197,16 @@ sqStatus sqListDelete(SqList *L,int i,sqElemType *e)
 void sqUnionList(SqList *La,SqList Lb)
 {
 	int La_len,Lb_len,i;
-	sqStatus e;
+	sqElemType *e = NULL;
 	//得到长度 
-	La_len=ListLength(*La);
-	Lb_len=ListLength(Lb);
+	La_len=sqListLength(*La);
+	Lb_len=sqListLength(Lb);
 	//取出B链表的值，搜索A链表
 	for (i=1;i<=Lb_len;i++)
 	{
-		GetElem(Lb,i,&e);
-		if (!LocateElem(*La,e))
-			ListInsert(La,++La_len,e);
+		sqGetElem(Lb,i,e);
+		if (!sqLocateElem(*La,*e))
+			sqListInsert(La,++La_len,*e);
 	}
 }
 
@@ -224,24 +225,24 @@ sqStatus sqDelMin(SqList *L ,sqElemType *value)
 	int16_t	min_data_i	=0;
 	int16_t	i			=0;
 	
-	if (L.length==0)
+	if (L->length==0)
 	{
 		return ERROR;
 	}
-	*value=L.data[0];
-	for (i = 1; i < L.length; ++i)
+	*value=L->data[0];
+	for (i = 1; i < L->length; ++i)
 	{
-		if (*value > L.data[i])
+		if (*value > L->data[i])
 		{
-			*value = L.data[i];
+			*value = L->data[i];
 			min_data_i = i;
 		}
 	}
 	//删除，不改变顺序，要将内部引索值换成外部的
 	//sqListDelete(L,min_data_i+1, value);
 	//删除，改变顺序
-	L.data[min_data_i] = L.data[L.length-1];
-	L.length--;
+	L->data[min_data_i] = L->data[L->length-1];
+	L->length--;
 	return OK;
 }
 
@@ -260,11 +261,11 @@ void sqInversion(SqList *L)
 	int 		i;
 	//如果外部是9，内部是8，交换是0-3<->8-5
 	//如果外部是8，内部是7，交换是0-3<->7-4
-	for ( i = 0; i < L.length/2; ++i)
+	for ( i = 0; i < L->length/2; ++i)
 	{
-		temp = L.data[ L.length-1-i];
-		L.data[ L.length-1-i ] = L.data[i];
-		L.data[i] = temp;
+		temp = L->data[ L->length-1-i];
+		L->data[ L->length-1-i ] = L->data[i];
+		L->data[i] = temp;
 	}
 }
 
@@ -281,17 +282,18 @@ void sqInversion(SqList *L)
 void sqDelAllX(SqList *L , sqElemType x)
 {
 	int i	= 0;
-	int j	= L.length;
-	sqElemType temp;
+	int j	= L->length;
+	//配合屏蔽片段
+	//sqElemType temp;
 	
 	while (i < j)
 	{
-		if (L.data[i] == x)
+		if (L->data[i] == x)
 		{
 			//删除，不改变顺序，要将内部引索值换成外部的
 			//sqListDelete(L,i+1, temp);		
 			//删除改变顺序
-			L.data[i] = L.data[ L.length-1 ];
+			L->data[i] = L->data[ L->length-1 ];
 			j--;
 		}
 		else
@@ -305,33 +307,33 @@ void sqDelAllX(SqList *L , sqElemType x)
 void sqDelAllX_Opt1(SqList *L, sqStatus x)
 {
 	int i =0 , k = 0;
-	for (i = 0, k = 0; i < L.length; ++i)
+	for (i = 0, k = 0; i < L->length; ++i)
 	{
 		//这里的k是来记录与X相等的数量，用来表示需要前移几位
-		if (L.data[i] == x)
+		if (L->data[i] == x)
 		{
 			k++;
 		}else{
-			L.data[i-k] = L.data[i]; 
+			L->data[i-k] = L->data[i]; 
 		}
 	}
-	L.length-= k;
+	L->length-= k;
 }
 void sqDelAllX_Opt2(SqList *L, sqElemType x)
 {
 	int i = 0, k = 0;
 	
 	//i是扫描引索,k是赋值引索，利用两个自加不一样的情况进行赋值
-	for (i = 0, k = 0; i < L.length; ++i)
+	for (i = 0, k = 0; i < L->length; ++i)
 	{
 		//不一样的赋值，且引索自加
-		if (L.data[i] != x)
+		if (L->data[i] != x)
 		{
-			L.data[k] = L.data[i];
+			L->data[k] = L->data[i];
 			k++;
 		}
 	}
-	L.length = k;
+	L->length = k;
 }
 /**************************************************************************************************
 * 4）有序表的高级函数
@@ -349,7 +351,7 @@ void sqDelAllX_Opt2(SqList *L, sqElemType x)
 sqStatus sqDelSeqListMin2Max(SqList *L, sqElemType min_data, sqElemType max_data)
 {
 	int i=0, k=0;
-	if(L.length==0)
+	if(L->length==0)
 	{
 		return ERROR;
 	}
@@ -357,17 +359,18 @@ sqStatus sqDelSeqListMin2Max(SqList *L, sqElemType min_data, sqElemType max_data
 	{
 		return ERROR;
 	}
-	for (i = 0 , k = 0; i < L.length; ++i)
+	for (i = 0 , k = 0; i < L->length; ++i)
 	{
 		//i是扫描引索,k是赋值引索，利用两个自加不一样的情况进行赋值
 		//将不在最大最小之间的进行赋值
-		if (!( min_data < L.data[i] && L.data[i] < max_data))
+		if (!( min_data < L->data[i] && L->data[i] < max_data))
 		{
-			L.data[k]=L.data[i];
+			L->data[k]=L->data[i];
 			k++;
 		}
 	}
-	L.length = k;
+	L->length = k;
+	return OK;
 }
 
 /**************************************************************************************************
@@ -384,29 +387,29 @@ sqStatus sqDelSeqListMin2Max(SqList *L, sqElemType min_data, sqElemType max_data
 boolean_t sqDelSeqListMin2Max2(SqList *L, sqElemType min_data, sqElemType max_data)
 {
 	int min_data_i, max_data_i;
-	if (min_data>=max_data || L.length==0)
+	if (min_data>=max_data || L->length==0)
 	{
 		return ERROR;
 	}
 	// 找最小的索引
-	for (min_data_i = 0; min_data_i < L.length&&L.data[min_data_i]<min_data; ++min_data_i);
-	if (i>L.length)
+	for (min_data_i = 0; min_data_i < L->length&&L->data[min_data_i]<min_data; ++min_data_i);
+	if (min_data_i>L->length)
 	{
 		return ERROR;
 	}
 	//找最大的索引
-	for (max_data_i = min_data_i; max_data_i < L.length && L.data[max_data_i] <= max_data; ++max_data_i);
-	if (j>L.length)
+	for (max_data_i = min_data_i; max_data_i < L->length && L->data[max_data_i] <= max_data; ++max_data_i);
+	if (max_data_i>L->length)
 	{
 		return ERROR;
 	}
 	//屏蔽最小和最大的中间进行赋值
-	for (; max_data_i < L.length; min_data_i++,max_data_i++)
+	for (; max_data_i < L->length; min_data_i++,max_data_i++)
 	{
-		L.data[min_data_i] = L.data[max_data_i];
+		L->data[min_data_i] = L->data[max_data_i];
 	}
 
-	L.length=min_data_i+1;
+	L->length=min_data_i+1;
 	return OK;
 }
 
@@ -422,20 +425,20 @@ boolean_t sqDelSeqListMin2Max2(SqList *L, sqElemType min_data, sqElemType max_da
 boolean_t sqDelSeqListEqual(SqList *L)
 {
 	int i, k;
-	if (L.length==0)
+	if (L->length==0)
 	{
 		return ERROR;
 	}
-	for (i = 1, k=0; i < L.length; ++i)
+	for (i = 1, k=0; i < L->length; ++i)
 	{
-		if(L.data[k] != L.data[i])
+		if(L->data[k] != L->data[i])
 		{
 			k++;					//指针对齐的问题
-			L.data[k] = L.data[i];
+			L->data[k] = L->data[i];
 		}
 		
 	}
-	L.length=k+1;
+	L->length=k+1;
 	return OK;
 }
 
@@ -454,7 +457,7 @@ boolean_t sqUnionSeqList(SqList A, SqList B, SqList *C)
 {
 	
 	int A_i,B_i,C_i;
-	if(A.length+B.length >SQ_MAXSIZE)
+	if(A.length+B.length >SQMAXSIZE)
 	{
 		return ERROR;
 	}
@@ -464,10 +467,10 @@ boolean_t sqUnionSeqList(SqList A, SqList B, SqList *C)
 	{
 		if(A.data[A_i] > B.data[B_i])
 		{
-			C.data[C_i] = B.data[B_i];
+			C->data[C_i] = B.data[B_i];
 			B_i++;
 		}else{
-			C.data[C_i] = A.data[A_i];
+			C->data[C_i] = A.data[A_i];
 			A_i++;
 		}
 		C_i++;
@@ -475,17 +478,17 @@ boolean_t sqUnionSeqList(SqList A, SqList B, SqList *C)
 	//哪个有剩继续赋值
 	while (A_i < A.length)
 	{
-		C.data[C_i] = A.data[A_i];
+		C->data[C_i] = A.data[A_i];
 		C_i++;
 		A_i++;
 	}
 	while (B_i < B.length)
 	{
-		C.data[C_i] = B.data[B_i];
+		C->data[C_i] = B.data[B_i];
 		C_i++;
 		B_i++;
 	}
-	C.length = C_i;
+	C->length = C_i;
 	return OK;
 }
 
@@ -509,7 +512,7 @@ boolean_t sqUnionSeqList(SqList A, SqList B, SqList *C)
 boolean_t arrayInverse(int16_t A[], int left, int right,  int arraySize)
 {
 	int mid, i;
-	sqStatus temp;
+	int temp;
 	if(left >= right || right >= arraySize )
 	{
 		return ERROR;
@@ -524,7 +527,7 @@ boolean_t arrayInverse(int16_t A[], int left, int right,  int arraySize)
 		A[left+i] = A[right-i];
 		A[right-i] = temp;
 	}
-	
+	return OK;
 }
 /**************************************************************************************************
 * 函数:                                   arrayAB2BA
@@ -541,9 +544,9 @@ boolean_t arrayInverse(int16_t A[], int left, int right,  int arraySize)
 **************************************************************************************************/
 void arrayAB2BA(int16_t A[],  int m, int n, int arraySize)
 {
-	arrayInverse(A, 0, m+n-1, arraySize)
-	arrayInverse(A, 0, n-1, arraySize)
-	arrayInverse(A, n, m+n-1, arraySize)
+	arrayInverse(A, 0, m+n-1, arraySize);
+	arrayInverse(A, 0, n-1, arraySize);
+	arrayInverse(A, n, m+n-1, arraySize);
 }
 /**************************************************************************************************
 * 函数:                                   arrayRotateLeft
@@ -560,9 +563,9 @@ void arrayAB2BA(int16_t A[],  int m, int n, int arraySize)
 **************************************************************************************************/
 void arrayRotateLeft(int16_t R[], int n, int p)
 {
-	arrayInverse(R, 0, p-1);
-	arrayInverse(R, p, n-1);
-	arrayInverse(R, 0, n-1);
+	arrayInverse(R, 0, p-1, p-1);
+	arrayInverse(R, p, n-1, n-1);
+	arrayInverse(R, 0, n-1, n-1);
 }
 
 /**************************************************************************************************
@@ -581,7 +584,8 @@ int16_t arraySeqArraySearchInsert(int16_t A[], int size_max,sqElemType x)
 {
 	int low=0, mid, hight=size_max-1;
 	int i;
-	sqElemType temp;
+	//配合屏蔽字段
+	//sqElemType temp;
 	//折半
 	while (low<=hight)
 	{
@@ -732,7 +736,7 @@ uint8_t arrayMajorElements(int A[], int size)
 	}
 	if (count > size/2)
 	{
-		return Maj_temp
+		return Maj_temp;
 	}else{
 		return ERROR;
 	}
@@ -753,8 +757,8 @@ int arryMiniPositInteger(int A[],int size)
 	 int i, *B;
 	 //数组为n个，他如果最满就是[1,2,3,4,5,6,7,8,9],有几个索引就有从最小到大的正整数
 	 //如果其中有其他被替换，对应的正整数的索引一定有缺
-	 B = (int *)malloc(sizeof(int)*n);
-	 memset(B, 0, sizeof(int)*n);
+	 B = (int *)malloc(sizeof(int)*size);
+	 memset(B, 0, sizeof(int)*size);
 	 //有的正整数对应索引置一
 	 for (i = 0; i < size; ++i)	
 	 {
@@ -796,32 +800,32 @@ int main()
     sqStatus i;
     int j,k;
     i=InitList(&L);
-    printf("初始化L后：L.length=%d\n",L.length);
+    printf("初始化L后：L->length=%d\n",L->length);
     for(j=1;j<=5;j++)
             i=ListInsert(&L,1,j);
-    printf("在L的表头依次插入1～5后：L.data=");
+    printf("在L的表头依次插入1～5后：L->data=");
     ListTraverse(L); 
 
-    printf("L.length=%d \n",L.length);
+    printf("L->length=%d \n",L->length);
     i=ListEmpty(L);
     printf("L是否空：i=%d(1:是 0:否)\n",i);
 
     i=ClearList(&L);
-    printf("清空L后：L.length=%d\n",L.length);
+    printf("清空L后：L->length=%d\n",L->length);
     i=ListEmpty(L);
     printf("L是否空：i=%d(1:是 0:否)\n",i);
 
     for(j=1;j<=10;j++)
             ListInsert(&L,j,j);
-    printf("在L的表尾依次插入1～10后：L.data=");
+    printf("在L的表尾依次插入1～10后：L->data=");
     ListTraverse(L); 
 
-    printf("L.length=%d \n",L.length);
+    printf("L->length=%d \n",L->length);
 
     ListInsert(&L,1,0);
-    printf("在L的表头插入0后：L.data=");
+    printf("在L的表头插入0后：L->data=");
     ListTraverse(L); 
-    printf("L.length=%d \n",L.length);
+    printf("L->length=%d \n",L->length);
 
     GetElem(L,5,&e);
     printf("第5个元素的值为：%d\n",e);

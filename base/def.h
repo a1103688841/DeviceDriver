@@ -9,7 +9,10 @@
 #define __DEF_H__
 
 /* ------------------------------------------- include ----------------------------------------- */
-
+//包含其他基本定义
+#include <stdio.h>
+#include <stdlib.h>
+//#include "gd32f30x.h"
 
 /* ------------------------------------- define/typedef/enum ----------------------------------- */
 //常用类型
@@ -23,22 +26,40 @@ typedef unsigned		char	boolean_t	;
 
 
 //常用开关/真假
-#define ON			1
-#define OFF			0
+#ifndef ON	
+#define ON				1
+#endif
+#ifndef OFF	
+#define OFF				0
+#endif
+#ifndef YES	
+#define YES				1
+#endif
+#ifndef NO	
+#define NO				0
+#endif
+#ifndef TRUE	
+#define TRUE			1 
+#endif
+#ifndef FALSE	
+#define FALSE			0
+#endif
+#ifndef OK	
+#define	OK				1
+#endif
+#ifndef ERROR	
+#define ERROR 			0
+#endif
+#ifndef SUCCESS	
+#define SUCCESS			1
+#endif
+#ifndef FAIL	
+#define	FAIL			0
+#endif
+#ifndef NULL	
+#define NULL			((void *)0)
+#endif
 
-#define YES			1
-#define NO			0
-
-#define TRUE		1   
-#define FALSE		0
-
-#define	OK			1
-#define ERROR 		0
-
-#define SUCCESS		1
-#define	FAIL		0
-
-#define NULL        ((void *)0)
 
 
 //比特对应十六进制数

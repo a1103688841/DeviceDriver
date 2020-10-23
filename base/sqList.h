@@ -11,24 +11,10 @@
 /* ------------------------------------------- include ----------------------------------------- */
 #include "def.h"
 //默认	
-#include "stdio.h"      
-#include "math.h"  
+#include "stdlib.h"      
 #include "string.h"
 
 /* ------------------------------------- define/typedef/enum ----------------------------------- */
-//在def.h中定义
-#ifndef OK
-#define OK 1
-#endif
-#ifndef ERROR
-#define ERROR 0
-#endif
-#ifndef TRUE
-#define TRUE 1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
 
 typedef uint8_t sqStatus;      			/* sqStatus是函数的类型,其值是函数结果状态代码，如OK等 */
 typedef int16_t sqElemType;  				/* sqElemType类型根据实际情况而定，这里假设为int */
@@ -48,6 +34,7 @@ typedef struct
 	#define SQLIST_EXT		extern
 #endif
 
+
 #if 0
 SQLIST_EXT S32 var
 #ifdef __SQLIST_C__
@@ -57,19 +44,17 @@ SQLIST_EXT S32 var
 #endif
 
 /* ------------------------------------------- funtion ----------------------------------------- */
-//打印
-
-extern sqStatus sqVisit (sqElemType c);								//打印一个元素
-extern sqStatus sqListTraverse (SqList L);							//打印全部
+//打印		
+extern sqStatus sqListPrintTraverse (SqList L);							//打印全部
 
 //内部操作函数，外部索引逻辑是1-n
 extern sqStatus sqInitList (SqList *L); 							//初始
 extern sqStatus sqClearList (SqList *L);							//清除
 extern sqStatus sqListEmpty (SqList L);								//空？
-extern sqStatus sqGetElem (SqList L, int i, sqElemType *e);			//取元素
 extern int16_t sqListLength (SqList L);								//取长度
+extern sqStatus sqGetElem (SqList L, int i, sqElemType *e);			//取元素
 extern int16_t sqLocateElem (SqList L, sqElemType e);				//查找
-extern sqStatus sqListDelete (SqList *L, int i, sqElemType *e);	//删除
+extern sqStatus sqListDelete (SqList *L, int i, sqElemType *e);		//删除
 extern sqStatus sqListInsert (SqList *L, int i, sqElemType e);		//插入
 
 //高级操作

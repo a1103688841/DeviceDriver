@@ -1,0 +1,12 @@
+
+/* externs */
+extern int main ();
+extern slListStatus slListClear (StaticLinkList space);
+extern slListStatus slListDelete (StaticLinkList L, int i);
+extern slListStatus slListInit (StaticLinkList space);
+extern slListStatus slListInsert (StaticLinkList L, int i, slListElemType e);
+extern int slListLength (StaticLinkList L);
+extern void slListPrintfTraverse (StaticLinkList L);
+extern void slList_Free (StaticLinkList space, int k);
+extern int slList_Malloc (StaticLinkList space);
+

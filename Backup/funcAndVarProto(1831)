@@ -1,0 +1,4 @@
+
+/* static function pre-declared */
+static slListStatus slListVisit (slListElemType c);
+
