@@ -1,0 +1,31 @@
+---- SElemType Matches (36 in 6 files) ----
+DoubleStack.c (base) line 15 : typedef int SElemType; /* SElemType类型根据实际情况而定，这里假设为int */
+{anonSqDoubleStack} in DoubleStack.c (base) :         SElemType data[MAXSIZE];
+DoubleStack.c (base) line 27 : Status visit(SElemType c)
+DoubleStack.c (base) line 65 : Status Push(SqDoubleStack *S,SElemType e,int stackNumber)
+DoubleStack.c (base) line 77 : Status Pop(SqDoubleStack *S,SElemType *e,int stackNumber)
+DoubleStack.h (base) line 15 : typedef int SElemType; /* SElemType类型根据实际情况而定，这里假设为int */
+{anonSqDoubleStack} in DoubleStack.h (base) :         SElemType data[MAXSIZE];
+DoubleStack.h (base) line 27 : Status visit(SElemType c)
+DoubleStack.h (base) line 65 : Status Push(SqDoubleStack *S,SElemType e,int stackNumber)
+DoubleStack.h (base) line 77 : Status Pop(SqDoubleStack *S,SElemType *e,int stackNumber)
+LinkStack.c (base) line 14 : typedef int SElemType; /* SElemType类型根据实际情况而定，这里假设为int */
+StackNode in LinkStack.c (base) :         SElemType data;
+LinkStack.c (base) line 31 : Status visit(SElemType c)
+LinkStack.c (base) line 79 : Status GetTop(LinkStack S,SElemType *e)
+LinkStack.c (base) line 89 : Status Push(LinkStack *S,SElemType e)
+LinkStack.c (base) line 100 : Status Pop(LinkStack *S,SElemType *e)
+LinkStack.h (base) line 14 : typedef int SElemType; /* SElemType类型根据实际情况而定，这里假设为int */
+StackNode in LinkStack.h (base) :         SElemType data;
+LinkStack.h (base) line 31 : Status visit(SElemType c)
+LinkStack.h (base) line 79 : Status GetTop(LinkStack S,SElemType *e)
+LinkStack.h (base) line 89 : Status Push(LinkStack *S,SElemType e)
+LinkStack.h (base) line 100 : Status Pop(LinkStack *S,SElemType *e)
+Stack.c (base) line 25 : static Status sqStackVisit(sqSElemType c)
+sqStackVisit in Stack.c (base) : static Status sqStackVisit(sqSElemType c)
+InitStack in Stack.c (base) :         /* S.data=(SElemType *)malloc(MAXSIZE*sizeof(SElemType)); */
+Stack.c (base) line 71 : Status GetTop(SqStack S,SElemType *e)
+Stack.c (base) line 81 : Status Push(SqStack *S,SElemType e)
+Stack.c (base) line 93 : Status Pop(SqStack *S,SElemType *e)
+Stack.h (base) line 16 : typedef int sqSElemType; /* SElemType类型根据实际情况而定，这里假设为int */
+{anonSqStack} in Stack.h (base) :         sqSElemType data[SQSMAXSIZE];

@@ -20,12 +20,14 @@ typedef int sqQStatus;
 typedef int sqQElemType; /* sqQElemType类型根据实际情况而定，这里假设为int */
 
 /* 循环队列的顺序存储结构 */
-//头指针和尾指针相等表示队列空
-//队尾是入队元素的指针，对头是出队元素的指针
-//SQQUEUEMAXSIZE=20,及是分配了20个空间，从内部索引是0-19,索引直接%SQQUEUEMAXSIZE，就是0-19，无需转换
-//求队列长度是(Q.rear-Q.front+SQQUEUEMAXSIZE)%SQQUEUEMAXSIZE
-//情况1）rear在front大，值的含义是距离，正常值是正的，加上一圈，不影响
-//情况2）front在rear大，值是负的，值的大小等于他们之间的距离，加上一圈就是将一圈减去他们的距离，剩余另一半的正距离
+
+////头指针和尾指针相等表示队列空
+////font指针指向出队元素，rear指针指向将要入队的元素位置
+
+////SQQUEUEMAXSIZE=20,及是分配了20个空间，从内部索引是0-19,索引直接%SQQUEUEMAXSIZE，就是0-19，无需转换
+////求队列长度是(Q.rear-Q.front+SQQUEUEMAXSIZE)%SQQUEUEMAXSIZE
+////情况1）rear在front大，值的含义是距离，正常值是正的，加上一圈，不影响
+////情况2）front在rear大，值是负的，值的大小等于他们之间的距离，加上一圈就是将一圈减去他们的距离，剩余另一半的正距离
 typedef struct
 {
 	sqQElemType data[SQQUEUEMAXSIZE];

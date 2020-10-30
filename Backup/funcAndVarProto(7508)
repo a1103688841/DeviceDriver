@@ -1,0 +1,12 @@
+
+/* externs */
+extern lSStatus lStackClear (LinkStack *S);
+extern lSStatus lStackEmpty (LinkStack S);
+extern lSStatus lStackGetTop (LinkStack S, lSElemType *e);
+extern lSStatus lStackInit (LinkStack *S);
+extern int lStackLength (LinkStack S);
+extern lSStatus lStackPop (LinkStack *S, lSElemType *e);
+extern lSStatus lStackPrintfTraverse (LinkStack S);
+extern lSStatus lStackPush (LinkStack *S, lSElemType e);
+extern int main ();
+

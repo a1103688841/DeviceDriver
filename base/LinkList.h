@@ -77,21 +77,21 @@ extern void linkListPrintTraverse (LinkList L);					//打印顺序
 extern void linkListPrintInversion (LinkList L);				//打印逆置
 
 //内部函数
-extern linkStatus linkListInit (LinkList* L);					//初始化（malloc）
-extern void linkListInitRandomElementsHeadInsertion (LinkList* L, int n);					//随机初始化
-extern void linkListInitRandomElementsTailInsertion (LinkList* L, int n);					//随机初始化
-extern void linkListClear (LinkList* L);						//清空（free）
-extern linkStatus linkListEmpty (LinkList L);					//空？
-extern int16_t linkListLength (LinkList L);						//长度
-extern linkStatus linkListGetElem (LinkList L, int i, linkElemType* e);						//索引
-extern int16_t linkListLocateElem (LinkList L, linkElemType e);								//搜索
-extern linkStatus linkListInsert (LinkList* L, int i, linkElemType e);						//在索引处插入（malloc）
-extern linkStatus linkListDelete (LinkList* L, int i, linkElemType* e);						//删除指定索引(free)
+extern linkStatus 	linkListInit (LinkList* L);					//初始化（malloc）
+extern void 		linkListRandomHeadInsertion (LinkList* L, int n);				//随机初始化
+extern void 		linkListRandomTailInsertion (LinkList* L, int n);				//随机初始化
+extern void 		linkListClear (LinkList* L);				//清空（free）
+extern linkStatus 	linkListEmpty (LinkList L);					//空？
+extern int16_t 		linkListLength (LinkList L);				//长度
+extern linkStatus 	linkListGetElem (LinkList L, int i, linkElemType* e);			//索引
+extern int16_t 		linkListLocateElem (LinkList L, linkElemType e);				//搜索
+extern linkStatus 	linkListInsert (LinkList* L, int i, linkElemType e);			//在索引处插入（malloc）
+extern linkStatus 	linkListDelete (LinkList* L, int i, linkElemType* e);			//删除指定索引(free)
 ////手动变量申请的不同地方
-extern linkStatus linkListInitManu ();							//初始化
-extern void linkListClearManu (LinkList L);						//清空
-extern linkStatus linkListInsertManu (LinkList L, LinkList node, int i, linkElemType e);	//在索引处插入
-extern linkStatus linkListDeleteManu (LinkList L, int i, linkElemType* e);					//删除指定索引
+extern linkStatus 	linkListAssign ();							//初始化
+extern void 		linkListClearManu (LinkList L);				//清空
+extern linkStatus 	linkListInsertManu (LinkList L, LinkList node, int i, linkElemType e);	//在索引处插入
+extern linkStatus 	linkListDeleteManu (LinkList L, int i, linkElemType* e);					//删除指定索引
 
 
 //高级函数

@@ -18,7 +18,6 @@
 
 typedef uint8_t sqStatus;      			/* sqStatus是函数的类型,其值是函数结果状态代码，如OK等 */
 typedef int16_t sqElemType;  				/* sqElemType类型根据实际情况而定，这里假设为int */
-
 #define SQMAXSIZE 20 					/* 存储空间初始分配量 */
 typedef struct
 {

@@ -94,7 +94,7 @@ linkStatus linkListInit(LinkList *L)
 	return OK;
 }
 //这个用一阶指针就可以了,但是为了和上面保存一致性就用了二阶
-linkStatus linkListInitManu()
+linkStatus linkListAssign()
 {
 	//结点初始化，将一阶指针和变量连起来，要十分注意名字
 	linkList_point2_head 			= &linkList_var2_head;
@@ -121,7 +121,7 @@ linkStatus linkListInitManu()
 }
 /*  随机产生n个元素的值，建立带表头结点的单链线性表L（头插法） */
 //有些单片机不支持time函数
-void linkListInitRandomElementsHeadInsertion(LinkList* L, int n)
+void linkListRandomHeadInsertion(LinkList* L, int n)
 {
 //	LinkList p;
 //	int i;
@@ -137,7 +137,7 @@ void linkListInitRandomElementsHeadInsertion(LinkList* L, int n)
 //	}
 }
 /*  随机产生n个元素的值，建立带表头结点的单链线性表L（尾插法） */
-void linkListInitRandomElementsTailInsertion(LinkList* L, int n)
+void linkListRandomTailInsertion(LinkList* L, int n)
 {
 //	LinkList p, r;
 //	int i;

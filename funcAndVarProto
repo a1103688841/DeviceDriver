@@ -1,13 +1,11 @@
 
 /* externs */
-extern lQStatus lQueueClear (LinkQueue *Q);
-extern lQStatus lQueueDeQueue (LinkQueue *Q, lQElemType *e);
-extern lQStatus lQueueDestroy (LinkQueue *Q);
-extern lQStatus lQueueEmpty (LinkQueue Q);
-extern lQStatus lQueueEnQueue (LinkQueue *Q, lQElemType e);
-extern lQStatus lQueueGetHead (LinkQueue Q, lQElemType *e);
-extern lQStatus lQueueInit (LinkQueue *Q);
-extern int lQueueLength (LinkQueue Q);
-extern lQStatus lQueuePrintfTraverse (LinkQueue Q);
 extern int main ();
+extern sqDStatus sqDStackClear (SqDoubleStack *S);
+extern sqDStatus sqDStackEmpty (SqDoubleStack S);
+extern sqDStatus sqDStackInit (SqDoubleStack *S);
+extern int sqDStackLength (SqDoubleStack S);
+extern sqDStatus sqDStackPop (SqDoubleStack *S, sqDSElemType *e, int stackNumber);
+extern sqDStatus sqDStackPrintfTraverse (SqDoubleStack S);
+extern sqDStatus sqDStackPush (SqDoubleStack *S, sqDSElemType e, int stackNumber);
 
